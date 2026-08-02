@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import { useAuth } from "./context/AuthContext";
 
 import MainLayout      from "./context/layouts/MainLayout";
@@ -33,7 +34,8 @@ function DashboardIndex() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <Routes>
 
       {/* Public */}
       <Route element={<MainLayout />}>
@@ -84,6 +86,8 @@ export default function App() {
       {/* Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
 
-    </Routes>
+      </Routes>
+      <Analytics />
+    </>
   );
 }
