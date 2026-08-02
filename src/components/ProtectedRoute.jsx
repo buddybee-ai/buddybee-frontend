@@ -1,0 +1,41 @@
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+const ROLE_ROUTES = {
+  student:   "/dashboard/student",
+  parent:    "/dashboard/parent",
+  counselor: "/dashboard/counselor",
+  admin:     "/dashboard/admin",
+};
+
+const ProtectedRoute = ({ children, roleRequired }) => {
+  const { token, role, loading } = useAuth();
+
+  // Still checking stored session — render nothing to prevent flash
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="text-4xl mb-3 animate-bounce">🐝</div>
+          <p className="text-slate-400 text-sm">Loading BuddyBee...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not authenticated → login
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Authenticated but wrong role → redirect to correct dashboard
+  if (roleRequired && role !== roleRequired) {
+    const destination = ROLE_ROUTES[role] || "/login";
+    return <Navigate to={destination} replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;

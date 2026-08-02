@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /settings
+
+Sitemap: https://buddybeeai.com/sitemap.xml
