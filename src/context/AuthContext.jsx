@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import api, { TOKEN_KEY, USER_KEY, ROLE_KEY } from "../api";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import api from "../api";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -17,52 +17,29 @@ function enrichUser(raw) {
 
 export const AuthProvider = ({ children }) => {
   const [user,    setUser]    = useState(null);
-  const [token,   setToken]   = useState(null);
   const [role,    setRole]    = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Silent session check on load. No token ever touches localStorage or
+  // JS-visible state — the browser just sends whatever HttpOnly cookies
+  // it already has, and the backend tells us who (if anyone) that is.
   useEffect(() => {
     const restoreSession = async () => {
-      const storedToken   = localStorage.getItem(TOKEN_KEY);
-      const storedUserRaw = localStorage.getItem(USER_KEY);
-
-      if (!storedToken) {
-        setLoading(false);
-        return;
-      }
-
-      // Immediately restore from localStorage so user sees dashboard right away
-      if (storedUserRaw) {
-        try {
-          const cached = JSON.parse(storedUserRaw);
-          setToken(storedToken);
-          setUser(cached);
-          setRole(cached.role);
-        } catch { /* corrupt data — /me will fix */ }
-      }
-
-      // Silently validate token in background
       try {
         const res = await api.get("/me");
         const enriched = enrichUser(res.data.user);
-        localStorage.setItem(USER_KEY, JSON.stringify(enriched));
-        localStorage.setItem(ROLE_KEY, enriched.role);
-        setToken(storedToken);
         setUser(enriched);
         setRole(enriched.role);
-      } catch (err) {
-        const status = err.response?.status;
-        if (status === 401 || status === 403) {
-          // Token rejected by server — force re-login
-          localStorage.removeItem(TOKEN_KEY);
-          localStorage.removeItem(USER_KEY);
-          localStorage.removeItem(ROLE_KEY);
-          setToken(null);
-          setUser(null);
-          setRole(null);
-        }
-        // Any other error (network, timeout, CORS, cold start) → stay logged in
-        // so a Railway cold-start doesn't log the user out
+      } catch {
+        // api.js's response interceptor already tried one silent
+        // /auth/refresh + retry before this rejection reaches here — if
+        // we're still failing, there's genuinely no valid session (first
+        // visit, expired refresh token, or it was revoked/logged out
+        // elsewhere). Render as logged out; ProtectedRoute takes it from
+        // there. No error surfaced to the user — this is expected for
+        // most first-time visitors.
+        setUser(null);
+        setRole(null);
       } finally {
         setLoading(false);
       }
@@ -74,6 +51,14 @@ export const AuthProvider = ({ children }) => {
   const signup = async (name, email, password, userRole, school_id = null) => {
     try {
       const res = await api.post("/signup", { name, email, password, role: userRole, school_id });
+      // Signup now logs the account straight in (cookies are set by the
+      // backend response) — mirror that in local state immediately so the
+      // very next render already knows who's signed in, same as login().
+      if (res.data?.user) {
+        const enriched = enrichUser(res.data.user);
+        setUser(enriched);
+        setRole(enriched.role);
+      }
       return { success: true, data: res.data };
     } catch (error) {
       const msg =
@@ -85,20 +70,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = false) => {
     try {
-      const res = await api.post("/login", { email, password });
-      const { token: newToken, user: rawUser } = res.data;
-      const enriched = enrichUser(rawUser);
-
-      localStorage.setItem(TOKEN_KEY, newToken);
-      localStorage.setItem(USER_KEY,  JSON.stringify(enriched));
-      localStorage.setItem(ROLE_KEY,  enriched.role);
-
-      setToken(newToken);
+      const res = await api.post("/login", { email, password, remember_me: rememberMe });
+      const enriched = enrichUser(res.data.user);
       setUser(enriched);
       setRole(enriched.role);
-
       return { success: true, data: enriched };
     } catch (error) {
       const msg =
@@ -110,17 +87,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    localStorage.removeItem(ROLE_KEY);
-    setToken(null);
+  const logout = useCallback(async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch {
+      // Even if the network call fails, still clear local state below —
+      // the user's intent is to be logged out on THIS device regardless.
+    }
     setUser(null);
     setRole(null);
-  };
+  }, []);
+
+  const logoutAllDevices = useCallback(async () => {
+    try {
+      await api.post("/auth/logout-all");
+    } finally {
+      setUser(null);
+      setRole(null);
+    }
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, role, loading, signup, login, logout, isAuthenticated: !!token }}>
+    <AuthContext.Provider value={{
+      user, role, loading, signup, login, logout, logoutAllDevices,
+      isAuthenticated: !!user,
+    }}>
       {children}
     </AuthContext.Provider>
   );
