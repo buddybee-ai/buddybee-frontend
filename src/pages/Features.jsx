@@ -74,7 +74,7 @@ const specs = [
 
 export default function Features() {
   return (
-    <div className="pt-20">
+    <div>
       <SEO
         path="/features"
         title="Features"
