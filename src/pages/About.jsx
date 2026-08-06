@@ -54,7 +54,7 @@ export default function About() {
       />
 
       {/* ── Hero ── */}
-      <section className="py-16 md:py-24 px-4">
+      <section className="pb-16 md:pb-24 px-4">
         <div className="max-w-4xl mx-auto text-center bg-white/92 backdrop-blur-sm rounded-[2.5rem] border border-white/70 shadow-2xl p-6 sm:p-10 md:p-14">
           <BeeMascot size="lg" className="mb-6" />
           <div className="section-label mb-6">Our Story</div>
