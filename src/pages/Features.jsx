@@ -81,7 +81,7 @@ export default function Features() {
         description="Explore BuddyBee AI's features: 24/7 AI chat support, real-time stress detection, counselor dashboards, and privacy-first student wellness tools."
       />
       {/* Hero */}
-      <section className="relative py-24 px-4 overflow-hidden">
+      <section className="relative pt-28 pb-8 md:pt-32 md:pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0 grid-bg mask-fade-b -z-20" />
         <motion.div initial="hidden" animate="show" variants={fadeUp} className="max-w-4xl mx-auto text-center">
           <motion.div variants={fadeUp} custom={0} className="section-label mb-6">Platform Features</motion.div>
@@ -100,7 +100,7 @@ export default function Features() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 md:py-24 px-4">
+      <section className="pb-16 md:pb-24 px-4">
         <div className="max-w-7xl mx-auto bg-white/92 backdrop-blur-sm rounded-[2.5rem] border border-white/70 shadow-2xl p-6 sm:p-10 md:p-14">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mainFeatures.map((f, i) => (
