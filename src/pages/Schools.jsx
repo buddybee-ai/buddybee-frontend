@@ -38,7 +38,7 @@ export default function Schools() {
         description="See how BuddyBee AI helps schools and districts move from reactive to proactive student wellness with FERPA and HIPAA compliant AI insights."
       />
       {/* Hero */}
-      <section className="relative py-24 px-4 overflow-hidden">
+      <section className="relative pt-28 pb-8 md:pt-32 md:pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0 grid-bg mask-fade-b -z-20" />
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0}>
@@ -62,7 +62,7 @@ export default function Schools() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 md:py-24 px-4">
+      <section className="pb-16 md:pb-24 px-4">
         <div className="max-w-6xl mx-auto bg-white/92 backdrop-blur-sm rounded-[2.5rem] border border-white/70 shadow-2xl p-6 sm:p-10 md:p-14">
           <div className="text-center mb-16">
             <h2 className="section-title mb-4">Addressing the Silent Crisis</h2>
