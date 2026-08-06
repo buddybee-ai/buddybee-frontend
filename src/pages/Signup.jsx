@@ -33,7 +33,12 @@ export default function Signup() {
       setError("")
       const result = await signup(name, email, password, role, null)
       if (!result.success) throw new Error(result.message || T('common.error'))
-      navigate("/login", { replace: true })
+      // Signup now auto-authenticates (the backend sets the same session
+      // cookies login does) — go straight into the app instead of asking
+      // a brand-new user to immediately re-enter the password they just
+      // chose. Only "student" self-registers here, so /dashboard/chat is
+      // always the right destination.
+      navigate("/dashboard/chat", { replace: true })
     } catch (err) {
       setError(err.message || T('common.error'))
     } finally {
