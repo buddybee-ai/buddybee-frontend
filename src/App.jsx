@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import ChatPage from "./pages/ChatPage";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicOnlyRoute from "./components/PublicOnlyRoute";
 
 import StudentDashboard   from "./pages/dashboards/StudentDashboard";
 import ParentComingSoon   from "./pages/dashboards/ParentComingSoon";
@@ -38,7 +39,7 @@ export default function App() {
 
       {/* Public */}
       <Route element={<MainLayout />}>
-        <Route path="/"         element={<Home />}     />
+        <Route path="/"         element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
         <Route path="/features" element={<Features />} />
         <Route path="/schools"  element={<Schools />}  />
         <Route path="/about"    element={<About />}    />
@@ -47,8 +48,8 @@ export default function App() {
       </Route>
 
       {/* Auth */}
-      <Route path="/login"  element={<Login />}  />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/login"  element={<PublicOnlyRoute><Login /></PublicOnlyRoute>}  />
+      <Route path="/signup" element={<PublicOnlyRoute><Signup /></PublicOnlyRoute>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
