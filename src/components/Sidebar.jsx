@@ -70,7 +70,7 @@ export default function Sidebar({ collapsed, onCollapse, mobileOpen, onMobileClo
   const meta = ROLE_META[role]
   const avatarGradient = AVATAR_GRADIENT[role]
 
-  const handleLogout = () => { logout(); navigate('/login') }
+  const handleLogout = async () => { await logout(); navigate('/login') }
 
   const isUrdu = lang === 'ur'
   const urduFont = isUrdu ? "'Noto Nastaliq Urdu', serif" : 'inherit'
