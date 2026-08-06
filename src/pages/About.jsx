@@ -22,7 +22,7 @@ const values = [
 const founders = [
   {
     name:          'Dayyan Hassan',
-    role:          'CEO & Co-founder',
+    role:          'CEO & Founder',
     photo:         dayyanPhoto,
     gradientFrom:  '#6366f1',
     gradientTo:    '#3b82f6',
@@ -33,7 +33,7 @@ const founders = [
   },
   {
     name:          'Hamza Aziz',
-    role:          'COO & Co-founder',
+    role:          'COO ',
     photo:         hamzaPhoto,
     gradientFrom:  '#f59e0b',
     gradientTo:    '#f97316',
@@ -46,7 +46,7 @@ const founders = [
 
 export default function About() {
   return (
-    <div className="pt-20">
+    <div>
       <SEO
         path="/about"
         title="About Us"
