@@ -14,10 +14,11 @@ export default function Login() {
   const { lang, setLang } = useLang()
   const T = getT(lang)
 
-  const [form,     setForm]     = useState({ email: "", password: "" })
-  const [loading,  setLoading]  = useState(false)
-  const [error,    setError]    = useState("")
-  const [showPass, setShowPass] = useState(false)
+  const [form,       setForm]       = useState({ email: "", password: "" })
+  const [loading,    setLoading]    = useState(false)
+  const [error,      setError]      = useState("")
+  const [showPass,   setShowPass]   = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   const isUrdu = lang === "ur"
   const urduFont = isUrdu ? "'Noto Nastaliq Urdu', serif" : "inherit"
@@ -33,10 +34,12 @@ export default function Login() {
     try {
       setLoading(true)
       setError("")
-      const response = await login(form.email, form.password)
+      const response = await login(form.email, form.password, rememberMe)
       if (!response?.success) throw new Error(response?.message || T("login.invalid"))
       const role = (response.data?.role || "").toLowerCase().trim()
-      const routes = { student: "/dashboard/student", parent: "/dashboard/parent", counselor: "/dashboard/counselor", admin: "/dashboard/admin" }
+      // Students land straight in the chat companion — same "just open the
+      // app" destination as a returning, already-authenticated visit.
+      const routes = { student: "/dashboard/chat", parent: "/dashboard/parent", counselor: "/dashboard/counselor", admin: "/dashboard/admin" }
       const destination = routes[role]
       if (!destination) throw new Error(`Unknown role "${role}"`)
       navigate(destination, { replace: true })
@@ -176,7 +179,16 @@ export default function Login() {
                 </div>
               </div>
 
-              <div className="flex justify-end -mt-1">
+              <div className="flex items-center justify-between -mt-1 flex-wrap gap-2">
+                <label className="flex items-center gap-2 text-xs text-slate-500 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded border-slate-300 text-primary-600 focus:ring-primary-500/30 focus:ring-offset-0"
+                  />
+                  Remember me for 30 days
+                </label>
                 <Link to="/forgot-password" className="text-xs font-semibold text-primary-600 hover:text-primary-700 hover:underline">
                   Forgot password?
                 </Link>
