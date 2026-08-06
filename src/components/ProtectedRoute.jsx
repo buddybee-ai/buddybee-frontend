@@ -10,9 +10,10 @@ const ROLE_ROUTES = {
 };
 
 const ProtectedRoute = ({ children, roleRequired }) => {
-  const { token, role, loading } = useAuth();
+  const { isAuthenticated, role, loading } = useAuth();
 
-  // Still checking stored session — render nothing to prevent flash
+  // Still checking the HttpOnly-cookie session — render nothing to
+  // prevent a flash of the login page before we actually know.
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -25,7 +26,7 @@ const ProtectedRoute = ({ children, roleRequired }) => {
   }
 
   // Not authenticated → login
-  if (!token) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
@@ -34,6 +35,12 @@ const ProtectedRoute = ({ children, roleRequired }) => {
     const destination = ROLE_ROUTES[role] || "/login";
     return <Navigate to={destination} replace />;
   }
+
+  return children;
+};
+
+export default ProtectedRoute;
+
 
   return children;
 };
