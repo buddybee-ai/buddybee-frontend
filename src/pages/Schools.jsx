@@ -31,7 +31,7 @@ const whyChoose = [
 
 export default function Schools() {
   return (
-    <div className="pt-20">
+    <div>
       <SEO
         path="/schools"
         title="For Schools & Districts"
@@ -188,3 +188,4 @@ export default function Schools() {
     </div>
   )
 }
+
