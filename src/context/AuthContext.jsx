@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import api from "../api";
+import api, { setCsrfToken } from "../api";
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
         const enriched = enrichUser(res.data.user);
         setUser(enriched);
         setRole(enriched.role);
+        setCsrfToken(res.data.csrf_token);
       } catch {
         // api.js's response interceptor already tried one silent
         // /auth/refresh + retry before this rejection reaches here — if
@@ -55,9 +56,10 @@ export const AuthProvider = ({ children }) => {
       // backend response) — mirror that in local state immediately so the
       // very next render already knows who's signed in, same as login().
       if (res.data?.user) {
-        const enriched = enrichUser(res.data.user);
+        const enriched = enrichUser(res.data.user)
         setUser(enriched);
         setRole(enriched.role);
+        setCsrfToken(res.data.csrf_token);
       }
       return { success: true, data: res.data };
     } catch (error) {
@@ -76,6 +78,7 @@ export const AuthProvider = ({ children }) => {
       const enriched = enrichUser(res.data.user);
       setUser(enriched);
       setRole(enriched.role);
+      setCsrfToken(res.data.csrf_token);
       return { success: true, data: enriched };
     } catch (error) {
       const msg =
@@ -96,6 +99,7 @@ export const AuthProvider = ({ children }) => {
     }
     setUser(null);
     setRole(null);
+    setCsrfToken(null);
   }, []);
 
   const logoutAllDevices = useCallback(async () => {
@@ -104,6 +108,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setUser(null);
       setRole(null);
+      setCsrfToken(null);
     }
   }, []);
 
