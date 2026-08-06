@@ -1,10 +1,18 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
-import PageTransition from '../../components/ui/PageTransition'
 import ErrorBoundary from '../../components/ErrorBoundary'
 
+// NOTE: this used to wrap <Outlet/> in AnimatePresence + a fade/slide
+// PageTransition for a nicer page-switch feel — the exact same pattern
+// that caused the dashboard chat page to render completely invisible
+// (content present in the DOM, permanently stuck at its `initial`
+// opacity of 0, because the animation coordinating it never resolved).
+// That fix removed it from DashboardLayout; this page was still showing
+// the identical symptom on marketing pages (Features confirmed blank via
+// screenshot), so the same animation wrapper is removed here too rather
+// than keep guessing at a fix for a mechanism already proven unreliable.
+// Content visibility isn't optional — a missing fade-in is.
 export default function MainLayout() {
   const location = useLocation()
 
@@ -12,20 +20,14 @@ export default function MainLayout() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">
-        {/* mode="wait" removed on purpose — it makes AnimatePresence block
-            the new page's enter animation until the old one's exit
-            finishes, which is exactly the mechanism behind the stuck-
-            invisible-content bug found on the dashboard. Default (sync)
-            mode animates both at once with no such dependency. */}
-        <AnimatePresence>
-          <PageTransition key={location.pathname}>
-            <ErrorBoundary key={location.pathname}>
-              <Outlet />
-            </ErrorBoundary>
-          </PageTransition>
-        </AnimatePresence>
+        {/* Keyed by route so a caught error on one page doesn't linger
+            when the visitor navigates to a different, working page. */}
+        <ErrorBoundary key={location.pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       <Footer />
     </div>
   )
 }
+
