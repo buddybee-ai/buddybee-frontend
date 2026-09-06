@@ -11,6 +11,9 @@ import GlobalBackground from "./components/ui/GlobalBackground.jsx";
 import { pingBackend } from "./api.js";
 
 import "./index.css";
+// KaTeX's own stylesheet for rendered math (fonts, spacing, fraction
+// bars, etc). Imported once globally, same pattern as index.css above.
+import "katex/dist/katex.min.css";
 
 // Wake Railway backend immediately on app load
 // so it's ready before the user clicks Sign In
