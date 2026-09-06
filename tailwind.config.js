@@ -36,6 +36,9 @@ export default {
         display: ['Sora', 'sans-serif'],
         body:    ['DM Sans', 'sans-serif'],
         mono:    ['JetBrains Mono', 'monospace'],
+        // Warmer, rounder font used only inside the AI Chat interface —
+        // see index.html for the Google Fonts import.
+        chat:    ['Fredoka', 'sans-serif'],
       },
       backgroundImage: {
         'grid-slate': 'linear-gradient(to right, rgb(226 232 240 / 0.6) 1px, transparent 1px), linear-gradient(to bottom, rgb(226 232 240 / 0.6) 1px, transparent 1px)',
