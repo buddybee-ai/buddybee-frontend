@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import api from '../api'
 import { getGreeting, getWelcomeMessage, getThinkingLabel } from '../utils/greetings'
 import { getSuggestedStarters, getFriendlyError } from '../utils/chatUx'
+import MarkdownMessage from '../components/MarkdownMessage'
 
 // ── Risk banner config ────────────────────────────────────────────────────────
 const RISK_BANNERS = {
@@ -152,7 +153,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] bg-white/85 backdrop-blur-md rounded-2xl overflow-hidden border border-white/60 shadow-card">
+    <div className="font-chat flex flex-col h-[calc(100vh-6rem)] bg-white/85 backdrop-blur-md rounded-2xl overflow-hidden border border-white/60 shadow-card">
 
       {/* Header */}
       <div className="px-6 py-4 border-b border-slate-100 bg-white/90 backdrop-blur-md flex items-center gap-3 flex-shrink-0">
@@ -236,7 +237,7 @@ export default function ChatPage() {
               )}
 
               {/* Bubble */}
-              <div className={`flex flex-col gap-1 max-w-sm ${msg.from === 'user' ? 'items-end' : 'items-start'}`}>
+              <div className={`flex flex-col gap-1 max-w-sm sm:max-w-md ${msg.from === 'user' ? 'items-end' : 'items-start'}`}>
                 <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed
                   ${msg.from === 'user'
                     ? 'bg-gradient-to-br from-primary-600 to-primary-700 text-white rounded-br-md shadow-primary'
@@ -245,7 +246,7 @@ export default function ChatPage() {
                   ${msg.risk === 'high'   ? 'border-l-4 border-rose-400'  : ''}
                   ${msg.risk === 'medium' ? 'border-l-4 border-amber-400' : ''}
                 `}>
-                  {msg.text}
+                  <MarkdownMessage text={msg.text} isUser={msg.from === 'user'} />
                 </div>
                 {msg.time && (
                   <div className="text-xs text-slate-400 px-1">{msg.time}</div>
