@@ -49,6 +49,80 @@ function RiskHeatmap({ distribution }) {
   )
 }
 
+// ── Red-Flag Alerts (real data — replaces the old hardcoded dashboard.alerts) ──
+function RedFlagAlerts({ schoolId }) {
+  const [alerts, setAlerts]   = useState([])
+  const [loading, setLoading] = useState(true)
+  const [acking, setAcking]   = useState(null)
+
+  useEffect(() => {
+    if (!schoolId) { setLoading(false); return }
+    let cancelled = false
+    const poll = () => {
+      api.get('/api/counselor/alerts')
+        .then(res => { if (!cancelled) setAlerts(res.data.alerts || []) })
+        .catch(() => {})
+        .finally(() => { if (!cancelled) setLoading(false) })
+    }
+    poll()
+    const interval = setInterval(poll, 20000)
+    return () => { cancelled = true; clearInterval(interval) }
+  }, [schoolId])
+
+  const acknowledge = (alertId) => {
+    setAcking(alertId)
+    api.post(`/api/counselor/alerts/${alertId}/acknowledge`)
+      .then(() => setAlerts(prev => prev.filter(a => a.id !== alertId)))
+      .catch(() => {})
+      .finally(() => setAcking(null))
+  }
+
+  return (
+    <div className="card">
+      <div className="flex items-center gap-2 mb-4">
+        <AlertTriangle size={15} className="text-rose-500" />
+        <h3 className="font-display font-bold text-slate-800">Active Red-Flag Alerts</h3>
+        {alerts.length > 0 && (
+          <span className="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">{alerts.length}</span>
+        )}
+      </div>
+      {loading ? (
+        <p className="text-sm text-slate-400 text-center py-4">Loading...</p>
+      ) : alerts.length > 0 ? (
+        <div className="space-y-3">
+          {alerts.map((alert) => (
+            <motion.div
+              key={alert.id}
+              initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+              className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-start justify-between gap-3"
+            >
+              <div className="min-w-0">
+                <div className="font-semibold text-sm text-slate-800">
+                  {alert.student_name || 'A student'} — {alert.risk_level} risk
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">
+                  Detected {new Date((alert.created_at || '').replace(' ', 'T') + 'Z').toLocaleString()}
+                  {alert.trigger_count > 1 ? ` · triggered ${alert.trigger_count}×` : ''}
+                  {alert.reminder_count > 0 ? ` · reminded ${alert.reminder_count}×` : ''}
+                </div>
+              </div>
+              <button
+                onClick={() => acknowledge(alert.id)}
+                disabled={acking === alert.id}
+                className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 transition-colors disabled:opacity-50"
+              >
+                {acking === alert.id ? 'Acknowledging…' : 'Acknowledge'}
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-slate-500">No active alerts right now.</p>
+      )}
+    </div>
+  )
+}
+
 // ── Intervention Queue ────────────────────────────────────────────────────────
 function InterventionQueue({ highRiskCount, schoolId }) {
   const [students, setStudents] = useState([])
@@ -364,29 +438,13 @@ export default function CounselorDashboard() {
             {/* Interventions Tab */}
             {tab === 'interventions' && (
               <motion.div key="interventions" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+                <RedFlagAlerts schoolId={dashboard?.schoolId} />
+
                 <InterventionQueue highRiskCount={dashboard?.highRiskCount || 0} schoolId={dashboard?.schoolId} />
 
                 {selectedStudent && (
                   <StudentTimeline student={selectedStudent} onClose={() => setSelectedStudent(null)} />
                 )}
-
-                {/* All alerts */}
-                <div className="card">
-                  <h3 className="font-display font-bold mb-4 text-slate-800" style={textStyle}>{T('counselor.interventions')}</h3>
-                  {dashboard?.alerts?.length > 0 ? (
-                    <div className="space-y-3">
-                      {dashboard.alerts.map((alert, i) => (
-                        <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }} className="p-3 bg-red-50 border border-red-200 rounded-xl">
-                          <div className="font-semibold text-sm">{alert.student}</div>
-                          <div className="text-xs">{alert.msg}</div>
-                          <div className="text-xs text-slate-400 mt-1">{alert.time}</div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-slate-500" style={textStyle}>{T('counselor.noAlerts')}</p>
-                  )}
-                </div>
               </motion.div>
             )}
 
