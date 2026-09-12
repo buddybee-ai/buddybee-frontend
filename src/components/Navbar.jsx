@@ -83,7 +83,7 @@ export default function Navbar() {
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-2">
               <Link to="/login" className="btn-ghost text-sm">Log In</Link>
-              <Link to="/demo" className="btn-primary text-sm">Try Demo</Link>
+              <Link to="/contact" className="btn-primary text-sm">Request Demo</Link>
             </div>
 
             {/* Mobile toggle */}
@@ -141,7 +141,7 @@ export default function Navbar() {
                 ))}
                 <div className="flex gap-3 pt-3">
                   <Link to="/login" className="flex-1 btn-secondary text-sm justify-center">Log In</Link>
-                  <Link to="/demo" className="flex-1 btn-primary text-sm justify-center">Try Demo</Link>
+                  <Link to="/contact" className="flex-1 btn-primary text-sm justify-center">Request Demo</Link>
                 </div>
               </div>
             </motion.div>
