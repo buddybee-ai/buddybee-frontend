@@ -9,7 +9,6 @@ import Features from "./pages/Features";
 import Schools  from "./pages/Schools";
 import About    from "./pages/About";
 import Contact  from "./pages/Contact";
-import Demo     from "./pages/Demo";
 import Login    from "./pages/Login";
 import Signup   from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -44,7 +43,6 @@ export default function App() {
         <Route path="/schools"  element={<Schools />}  />
         <Route path="/about"    element={<About />}    />
         <Route path="/contact"  element={<Contact />}  />
-        <Route path="/demo"     element={<Demo />}     />
       </Route>
 
       {/* Auth */}
