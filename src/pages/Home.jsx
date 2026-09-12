@@ -190,8 +190,8 @@ function FeatureCard({ f, i }) {
             <h3 className="font-display font-bold text-2xl mb-3">{f.title}</h3>
             <p className="text-primary-100 leading-relaxed max-w-sm">{f.desc}</p>
           </div>
-          <Link to="/demo" className="relative inline-flex items-center gap-1.5 text-sm font-semibold mt-6 group w-fit">
-            Try it live
+          <Link to="/contact" className="relative inline-flex items-center gap-1.5 text-sm font-semibold mt-6 group w-fit">
+            Request a demo
             <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
           </Link>
         </Spotlight>
@@ -543,9 +543,6 @@ export default function Home() {
               <Link to="/contact" className="btn-primary text-base group">
                 Request School Demo
                 <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-              <Link to="/demo" className="btn-secondary text-base">
-                See How It Works
               </Link>
             </motion.div>
             <motion.div variants={fadeUp} custom={4} className="flex items-center gap-3 flex-wrap">
