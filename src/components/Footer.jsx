@@ -7,7 +7,6 @@ const footerLinks = {
   Product: [
     { label: 'Features', to: '/features' },
     { label: 'Schools', to: '/schools' },
-    { label: 'Try Demo', to: '/demo' },
     { label: 'Dashboard', to: '/dashboard' },
   ],
   Company: [
