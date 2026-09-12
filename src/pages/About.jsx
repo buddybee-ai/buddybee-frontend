@@ -9,7 +9,6 @@ const fadeUp = {
 }
 
 // Photos are served from the /public folder — no import needed
-const hamzaPhoto  = '/Hamza.jpg.jpg'
 const dayyanPhoto = '/Dayyan.jpg.jpg'
 
 const values = [
@@ -30,17 +29,6 @@ const founders = [
     ringClass:     'ring-indigo-400',
     intro: `Dayyan is an alum of Kips College, a passionate technologist and an entrepreneur dedicated to solving real-world problems through AI. With a deep belief that mental health support should be accessible to every student, he co-founded BuddyBee AI to bridge the gap between academic pressure and emotional well-being. His vision drives the product's core mission: making empathetic AI support a standard part of every student's journey.`,
     message: `"Every student deserves a space where they feel heard — not judged. BuddyBee was built for you. Your struggles are valid, your potential is limitless, and you are never alone on this journey. We built this so that whenever you feel the weight of the world on your shoulders, there's always a friend ready to listen."`,
-  },
-  {
-    name:          'Hamza Aziz',
-    role:          'COO ',
-    photo:         hamzaPhoto,
-    gradientFrom:  '#f59e0b',
-    gradientTo:    '#f97316',
-    badgeClass:    'bg-amber-50 text-amber-700 border-amber-200',
-    ringClass:     'ring-amber-400',
-    intro: `Hamza brings operational excellence and a student-first mindset to BuddyBee AI. Having navigated the pressures of academia himself, he understands what students go through — and is driven to ensure that every school has the tools to proactively support student mental wellness at scale. He oversees operations, partnerships, and the day-to-day mission of growing BuddyBee across institutions.`,
-    message: `"I've seen firsthand how stress and silence can derail a brilliant mind. No student should have to figure things out alone. BuddyBee is our promise to every student: we see you, we built this for you, and we are in your corner every single day — even at 2 AM the night before your exam."`,
   },
 ]
 
@@ -123,7 +111,7 @@ export default function About() {
             </div>
             <h2 className="section-title mb-4">The Minds Behind BuddyBee</h2>
             <p className="section-subtitle mx-auto max-w-xl">
-              Two friends who turned their own student struggles into a mission to ensure no one else ever has to face them alone.
+              A founder who turned his own student struggles into a mission to ensure no one else ever has to face them alone.
             </p>
           </div>
 
