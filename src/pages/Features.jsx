@@ -94,7 +94,6 @@ export default function Features() {
           </motion.p>
           <motion.div variants={fadeUp} custom={3} className="flex flex-wrap gap-4 justify-center">
             <Link to="/contact" className="btn-primary">Schedule Demo</Link>
-            <Link to="/demo" className="btn-secondary">Try It Free</Link>
           </motion.div>
         </motion.div>
       </section>
